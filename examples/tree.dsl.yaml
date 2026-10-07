@@ -1,0 +1,18 @@
+domain: tree.test
+version: 0.0.1
+name: Tree
+
+entities:
+  A:
+    attributes:
+      name: String
+  B:
+    attributes:
+      name: String
+
+links:
+  A:
+    - 1:n B
+
+trees:
+  MyTree: A > B

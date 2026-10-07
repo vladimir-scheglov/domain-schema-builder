@@ -1,0 +1,12 @@
+domain: test.test
+version: 0.0.1
+name: Test
+
+entities:
+  Category:
+    name: Категория
+    attributes:
+      name: String
+
+menus:
+  - Category

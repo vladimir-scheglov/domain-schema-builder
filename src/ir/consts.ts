@@ -1,0 +1,76 @@
+export const SYSTEM_ATTRIBUTE_IDS = new Set([
+  "id",
+  "organizationId",
+  "domainId",
+  "entityId",
+  "entityName",
+  "createdAt",
+  "createdBy",
+  "updatedAt",
+  "updatedBy",
+  "tenantId",
+  "label",
+  "version",
+]);
+
+export const BASE_TYPES = new Set([
+  "Uuid",
+  "Timestamp",
+  "Date",
+  "Time",
+  "TimestampRange",
+  "String",
+  "Text",
+  "MAC",
+  "Integer",
+  "Decimal",
+  "Float",
+  "Bool",
+  "Enum",
+  "IpAddress",
+  "CIDR",
+  "Reference",
+  "Workflow",
+  "Array",
+  "Table",
+  "Calculation",
+  "Configuration",
+  "Variable",
+  "URL",
+  "Identifier",
+  "Attachment",
+  "Counter",
+  "RQL",
+  "Automation",
+]);
+
+export const NO_DEFAULT_TYPES = new Set([
+  "Attachment",
+  "Workflow",
+  "Identifier",
+  "Counter",
+  "Reference",
+]);
+
+export const SORTING_SKIP_TYPES = new Set([
+  "Array",
+  "Table",
+  "Attachment",
+  "Text",
+  "Calculation",
+  "Counter",
+  "RQL",
+  "Configuration",
+  "Variable",
+  "Automation",
+]);
+
+export const SEARCHABLE_TYPES = new Set([
+  "String",
+  "Text",
+  "URL",
+  "MAC",
+  "IpAddress",
+  "CIDR",
+  "Reference",
+]);

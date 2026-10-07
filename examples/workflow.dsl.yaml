@@ -1,0 +1,26 @@
+domain: audit.test
+version: 0.0.1
+name: Audit Domain
+
+entities:
+  Audit:
+    name: Аудит
+    attributes:
+      subject: String
+      status: workflow(AuditStatusWorkflow)
+
+workflows:
+  AuditStatusWorkflow:
+    name: Статус аудита
+    description: Статус аудита
+    initial: planned
+    statuses:
+      planned: Запланирован
+      inProgress: В работе
+      completed: Завершен
+    transitions:
+      - planned -> inProgress
+      - inProgress -> completed
+
+menus:
+  - Audit

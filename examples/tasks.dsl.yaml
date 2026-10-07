@@ -1,0 +1,89 @@
+domain: tasks.test
+version: 0.0.1
+name: Tasks Domain
+description: Домен управления задачами
+tags: [tasks, kanban]
+
+entities:
+  Project:
+    name: Проект
+    label: "{projectName}"
+    attributes:
+      projectName: String
+      projectDescription: Text
+      status: workflow(ProjectWorkflow)
+
+  Task:
+    name: Задача
+    label: "{taskId}: {title}"
+    attributes:
+      taskId:
+        type: Identifier
+        sequence: TaskSeq
+        readonly: true
+      title: String
+      description: Text
+      status: workflow(TaskWorkflow)
+      priority: enum(Priority)
+      assignee: Reference(User)
+      dueDate: Date
+      tags: Array<String>
+
+  User:
+    name: Пользователь
+    label: "{fullName}"
+    attributes:
+      fullName: String
+      email: String
+      position: String
+
+links:
+  Project:
+    - 1:n Task
+  User:
+    - 1:n Task
+
+enums:
+  Priority:
+    LOW: Низкий
+    MEDIUM: Средний
+    HIGH: Высокий
+    URGENT: Срочный
+
+sequences:
+  TaskSeq:
+    startFrom: 100
+
+workflows:
+  ProjectWorkflow:
+    name: Статус проекта
+    initial: active
+    statuses:
+      active: Активен
+      paused: На паузе
+      completed: Завершён
+      archived: В архиве
+    transitions:
+      - active -> paused
+      - paused -> active
+      - active -> completed
+      - completed -> archived
+
+  TaskWorkflow:
+    name: Статус задачи
+    initial: todo
+    statuses:
+      todo: К выполнению
+      inProgress: В работе
+      review: На проверке
+      done: Готово
+    transitions:
+      - todo -> inProgress
+      - inProgress -> review
+      - review -> done
+      - review -> inProgress
+
+menus:
+  - Project
+  - Task
+  - User

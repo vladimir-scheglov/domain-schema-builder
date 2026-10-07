@@ -1,0 +1,53 @@
+{
+  "name": "domain-schema-builder",
+  "version": "0.1.0",
+  "description": "Генератор YAML-схем доменов из упрощённого DSL",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "dsb": "./dist/cli.js"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts src/cli.ts --format esm --dts",
+    "cli": "tsx src/cli.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "dev": "tsx examples/run.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "domain",
+    "schema",
+    "yaml",
+    "generator",
+    "dsl"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "commander": "^12.1.0",
+    "diff": "^9.0.0",
+    "yaml": "^2.5.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/diff": "^7.0.2",
+    "@types/node": "^22.5.0",
+    "tsup": "^8.2.4",
+    "tsx": "^4.19.0",
+    "typescript": "^5.5.4",
+    "vitest": "^2.0.5"
+  }
+}

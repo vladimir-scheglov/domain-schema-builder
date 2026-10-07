@@ -1,0 +1,25 @@
+domain: example.test
+version: 0.0.1
+name: Example Domain
+description: Пример домена
+author: Your Name
+tags: [example]
+
+entities:
+  Item:
+    name: Элемент
+    label: "{title}"
+    attributes:
+      title: String
+      description: String
+      status:
+        type: enum(ItemStatus)
+        default: OPEN
+
+enums:
+  ItemStatus:
+    OPEN: Открыт
+    CLOSED: Закрыт
+
+menus:
+  - Item

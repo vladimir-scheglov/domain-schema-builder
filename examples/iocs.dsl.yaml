@@ -1,0 +1,73 @@
+domain: iocs.test
+version: 0.0.1
+name: IOCs Domain
+description: Домен индикаторов компрометации
+author: Ivan Ivanov
+tags: [iocs]
+
+entities:
+  Server:
+    name: Сервер
+    attributes:
+      hostname: String
+      cpuCount: Integer
+
+  Ioc:
+    name: Индикатор
+    label: "{type}: {value}"
+    description: Индикатор компрометации
+    attributes:
+      value: String
+      type: enum(IocType)
+      sources: Array<Reference(IocSource)>
+      iocId:
+        type: Identifier
+        sequence: IOCSeq
+
+  IocSource:
+    name: Источник индикатора
+    label: "{sourceName}"
+    description: Источник индикатора
+    attributes:
+      sourceName: String
+      sourceDescription: String
+      sourceId:
+        type: Identifier
+        template: "{@YYYY}-{@MM}-{@inc}"
+
+  Incident:
+    name: Инцидент
+    label: "{incidentSubject}"
+    description: Инцидент
+    attributes:
+      incidentSubject: String
+      incidentDescription: String
+      status:
+        type: enum(IncidentStatus)
+        default: OPEN
+      incidentId:
+        type: Identifier
+        template: "{@prefix}-{@YY}/{@MM}/{@DD}-{@inc}"
+        defaultPrefix: INC
+        incrementTemplate: "0000"
+
+links:
+  Ioc:
+    - n:n Incident
+
+enums:
+  IocType: [IP, Domain, URL, Email, MD5Hash, SHA256Hash]
+  IncidentStatus:
+    OPEN: Открыт
+    IN_PROGRESS: В работе
+    CLOSED: Закрыт
+
+sequences:
+  IOCSeq:
+    startFrom: 1
+    description: Последовательность для индикаторов
+
+menus:
+  - Ioc
+  - IocSource
+  - Incident
