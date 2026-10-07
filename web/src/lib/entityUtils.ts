@@ -18,8 +18,9 @@ export function computeNextCopyId(base: string, taken: string[]): string {
 /**
  * Создаёт копию сущности с новым ID.
  */
-export function cloneEntity(original: UIEntity, takenIds: string[]): UIEntity {
+export function cloneEntity(original: UIEntity, takenIds: string[], key: string): UIEntity {
   return {
+    _key: key,
     id: computeNextCopyId(original.id, takenIds),
     name: original.name ? `${original.name} (копия)` : "",
     label: original.label,

@@ -3,6 +3,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useStore } from '../store';
 import { computeNextCopyId } from '../lib/entityUtils';
 import { ENTITY_TEMPLATES, type EntityTemplate } from '../lib/entityTemplates';
+import {generateKey} from "../lib/generateKey";
 
 interface Props {
     onClose: () => void;
@@ -52,9 +53,11 @@ export function CommandPalette({
             group: 'Создать',
             run: () => {
                 const newId = generateEntityId(state.entities.map(e => e.id));
+                const key = generateKey();
                 dispatch({
                     type: 'addEntity',
                     entity: {
+                        _key: key,
                         id: newId,
                         name: '',
                         label: '',
@@ -63,7 +66,7 @@ export function CommandPalette({
                         attributes: [],
                     } as any,
                 });
-                onSelect(newId);
+                onSelect(key);
             },
         });
 
@@ -114,12 +117,9 @@ export function CommandPalette({
                 label: `Дублировать ${selected}`,
                 group: 'Действия',
                 run: () => {
-                    const newId = computeNextCopyId(
-                        selected,
-                        state.entities.map(e => e.id),
-                    );
-                    dispatch({ type: 'duplicateEntity', id: selected });
-                    onSelect(newId);
+                    const key = generateKey();
+                    dispatch({ type: 'duplicateEntity', id: selected, key });
+                    onSelect(key);
                 },
             });
 
@@ -138,7 +138,7 @@ export function CommandPalette({
                 label: `Перейти к ${e.name || e.id}`,
                 hint: e.id,
                 group: 'Перейти',
-                run: () => onSelect(e.id),
+                run: () => onSelect(e._key),
             });
         }
 

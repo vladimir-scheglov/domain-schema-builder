@@ -3,11 +3,12 @@ import { useState } from 'react';
 import type { EntityTemplate } from '../lib/entityTemplates';
 import { useStore } from '../store';
 import { isSystemAttribute } from '../lib/systemAttributes';
+import {generateKey} from "../lib/generateKey";
 
 interface Props {
     template: EntityTemplate;
     onClose: () => void;
-    onCreated: (entityId: string) => void;
+    onCreated: (entityId: string, key: string) => void;
 }
 
 export function EntityTemplateDialog({ template, onClose, onCreated }: Props) {
@@ -36,11 +37,12 @@ export function EntityTemplateDialog({ template, onClose, onCreated }: Props) {
         }
 
         const result = template.build({ entityId, entityName });
-
+        const key = generateKey();
         // Добавляем сущность (все четыре флага генерации reducer выставит сам)
         dispatch({
             type: 'addEntity',
             entity: {
+                _key: key,
                 id: result.entity.id,
                 name: result.entity.name,
                 label: result.entity.label,
@@ -96,7 +98,7 @@ export function EntityTemplateDialog({ template, onClose, onCreated }: Props) {
             }
         }
 
-        onCreated(entityId);
+        onCreated(entityId, key);
     };
 
     return (

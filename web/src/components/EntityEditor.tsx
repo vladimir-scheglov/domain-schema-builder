@@ -4,16 +4,16 @@ import { AttributeEditor } from './AttributeEditor';
 import { BulkAttributesDialog } from './BulkAttributesDialog';
 
 interface Props {
-    entityId: string;
+    entityKey: string;
 }
 
 // web/src/components/EntityEditor.tsx
-export function EntityEditor({ entityId }: Props) {
+export function EntityEditor({ entityKey }: Props) {
     const { state, dispatch } = useStore();
     const [bulkOpen, setBulkOpen] = useState(false);
     const [collapsed, setCollapsed] = useState(false);
 
-    const entity = state.entities.find(e => e.id === entityId);
+    const entity = state.entities.find(e => e._key === entityKey);
     if (!entity) return <div className="entity-editor-empty">Сущность не найдена</div>;
 
     const enumIds = state.enums.map(e => e.id);

@@ -33,6 +33,7 @@ export function irToUi(ir: IR): UIState {
   );
 
   const entities: UIEntity[] = ir.entities.map((e) => ({
+    _key: generateKey(),
     id: e.id,
     name: e.name ?? "",
     label: e.label ?? "",

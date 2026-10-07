@@ -15,6 +15,7 @@ export interface UIState {
 }
 
 export interface UIEntity {
+  _key: string;
   id: string;
   name: string;
   label: string;

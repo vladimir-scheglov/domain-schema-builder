@@ -64,8 +64,9 @@ export const ENTITY_TEMPLATES: EntityTemplate[] = [
     build: ({ entityId, entityName }) => {
       const idLower = entityId.charAt(0).toLowerCase() + entityId.slice(1);
       const seqId = `${entityId}Seq`;
-
+      const key = generateKey();
       const entity: UIEntity = {
+        _key: key,
         id: entityId,
         name: entityName || entityId,
         label: `{${idLower}Id}: {title}`,
@@ -121,8 +122,10 @@ export const ENTITY_TEMPLATES: EntityTemplate[] = [
       "Простой классификатор без UI: используется только как Reference",
     creates: ["Сущность с 4 атрибутами", "UI отключён (list, modals, panel)"],
     build: ({ entityId, entityName }) => {
+      const key = generateKey();
       return {
         entity: {
+          _key: key,
           id: entityId,
           name: entityName || entityId,
           label: "{name}",
@@ -166,9 +169,11 @@ export const ENTITY_TEMPLATES: EntityTemplate[] = [
       const idLower = entityId.charAt(0).toLowerCase() + entityId.slice(1);
       const seqId = `${entityId}Seq`;
       const workflowId = `${entityId}Workflow`;
+      const key = generateKey();
 
       return {
         entity: {
+          _key: key,
           id: entityId,
           name: entityName || entityId,
           label: `{${idLower}Id}`,
@@ -224,8 +229,10 @@ export const ENTITY_TEMPLATES: EntityTemplate[] = [
       "Audit-поля (createdAt, updatedAt, …) доступны автоматически",
     ],
     build: ({ entityId, entityName }) => {
+      const key = generateKey();
       return {
         entity: {
+          _key: key,
           id: entityId,
           name: entityName || entityId,
           label: "{title}",
@@ -268,8 +275,10 @@ export const ENTITY_TEMPLATES: EntityTemplate[] = [
     description: "Поля публикации: isPublished, publishedAt, publishedBy",
     creates: ["Сущность с 5 атрибутами", "Поля публикации readonly"],
     build: ({ entityId, entityName }) => {
+      const key = generateKey();
       return {
         entity: {
+          _key: key,
           id: entityId,
           name: entityName || entityId,
           label: "{title}",
@@ -313,8 +322,10 @@ export const ENTITY_TEMPLATES: EntityTemplate[] = [
     description: "Иерархия через parent: Reference(Self)",
     creates: ["Сущность с 5 атрибутами", "Ссылка parent на саму себя"],
     build: ({ entityId, entityName }) => {
+      const key = generateKey();
       return {
         entity: {
+          _key: key,
           id: entityId,
           name: entityName || entityId,
           label: "{name}",

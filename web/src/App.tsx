@@ -18,6 +18,7 @@ import { computeNextCopyId, generateEntityId } from './lib/entityUtils';
 import { DocsModal } from './components/DocsModal';
 import { EntityTemplateDialog } from './components/EntityTemplateDialog';
 import type { EntityTemplate } from './lib/entityTemplates';
+import {generateKey} from "./lib/generateKey";
 
 export default function App() {
     const { state, dispatch } = useStore();
@@ -64,10 +65,12 @@ export default function App() {
 
     const onNewEntity = useCallback(() => {
         const newId = generateEntityId(state.entities.map(e => e.id));
+        const _key = generateKey();
         dispatch({
             type: 'addEntity',
             entity: {
                 id: newId,
+                _key,
                 name: '',
                 label: '',
                 description: '',
@@ -75,7 +78,7 @@ export default function App() {
                 attributes: [],
             } as any,
         });
-        setSelected(newId);
+        setSelected(_key);
     }, [dispatch, state.entities]);
 
     const onNewAttribute = useCallback(() => {
@@ -113,12 +116,9 @@ export default function App() {
 
     const onDuplicateEntity = useCallback(() => {
         if (!selected) return;
-        const newId = computeNextCopyId(
-            selected,
-            state.entities.map(e => e.id),
-        );
-        dispatch({ type: 'duplicateEntity', id: selected });
-        setSelected(newId);
+        const key = generateKey();
+        dispatch({ type: 'duplicateEntity', id: selected, key });
+        setSelected(key);
     }, [dispatch, selected, state.entities]);
 
     const onOpenPalette = useCallback(() => {
@@ -185,7 +185,7 @@ export default function App() {
 
                 <main className="main">
                     <DomainForm />
-                    {selected && <EntityEditor entityId={selected} />}
+                    {selected && <EntityEditor entityKey={selected} />}
                     <EnumEditor />
                     <WorkflowEditor />
                     <LinkEditor />
@@ -217,8 +217,8 @@ export default function App() {
                 <EntityTemplateDialog
                     template={pendingTemplate}
                     onClose={() => setPendingTemplate(null)}
-                    onCreated={id => {
-                        setSelected(id);
+                    onCreated={(id, key) => {
+                        setSelected(key);
                         setPendingTemplate(null);
                     }}
                 />

@@ -1,8 +1,8 @@
-// web/src/components/EntityList.tsx
 import { useStore } from '../store';
 import { computeNextCopyId, generateEntityId } from '../lib/entityUtils';
 import { useState } from 'react';
 import { InheritEntityDialog } from './InheritEntityDialog';
+import {generateKey} from "../lib/generateKey";
 
 interface Props {
     selected: string | null;
@@ -18,9 +18,9 @@ export function EntityList({ selected, onSelect }: Props) {
         entityId: string,
     ) => {
         e.stopPropagation();
-        const newId = computeNextCopyId(entityId, state.entities.map(x => x.id));
-        dispatch({ type: 'duplicateEntity', id: entityId });
-        onSelect(newId);
+        const key = generateKey();
+        dispatch({ type: 'duplicateEntity', id: entityId, key });
+        onSelect(key);
     };
 
     const onInherit = (e: React.MouseEvent, parentId: string) => {
@@ -37,9 +37,11 @@ export function EntityList({ selected, onSelect }: Props) {
                         title={`Новая сущность (N)`}
                         onClick={() => {
                             const newId = generateEntityId(state.entities.map(e => e.id));
+                            const key = generateKey();
                             dispatch({
                                 type: 'addEntity',
                                 entity: {
+                                    _key: key,
                                     id: newId,
                                     name: '',
                                     label: '',
@@ -48,7 +50,7 @@ export function EntityList({ selected, onSelect }: Props) {
                                     attributes: [],
                                 } as any,
                             });
-                            onSelect(newId);
+                            onSelect(key);
                         }}
                     >
                         +
@@ -57,9 +59,9 @@ export function EntityList({ selected, onSelect }: Props) {
                 <ul>
                     {state.entities.map(e => (
                         <li
-                            key={e.id}
-                            className={selected === e.id ? 'active' : ''}
-                            onClick={() => onSelect(e.id)}
+                            key={e._key}
+                            className={selected === e._key ? 'active' : ''}
+                            onClick={() => onSelect(e._key)}
                         >
                             <div className="entity-name">{e.name || e.id}</div>
                             <div className="entity-id">{e.id}</div>
@@ -85,7 +87,7 @@ export function EntityList({ selected, onSelect }: Props) {
                                         ev.stopPropagation();
                                         if (confirm(`Удалить сущность ${e.id}?`)) {
                                             dispatch({ type: 'removeEntity', id: e.id });
-                                            if (selected === e.id) onSelect('');
+                                            if (selected === e._key) onSelect('');
                                         }
                                     }}
                                 >
@@ -100,8 +102,8 @@ export function EntityList({ selected, onSelect }: Props) {
                 <InheritEntityDialog
                     parentId={inheritParent}
                     onClose={() => setInheritParent(null)}
-                    onCreated={id => {
-                        onSelect(id);
+                    onCreated={(id, key) => {
+                        onSelect(key);
                         setInheritParent(null);
                     }}
                 />

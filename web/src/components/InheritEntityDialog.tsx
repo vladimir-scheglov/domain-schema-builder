@@ -1,4 +1,3 @@
-// web/src/components/InheritEntityDialog.tsx
 import { useState } from 'react';
 import { useStore } from '../store';
 import { generateKey } from '../lib/generateKey';
@@ -6,7 +5,7 @@ import { generateKey } from '../lib/generateKey';
 interface Props {
     parentId: string;
     onClose: () => void;
-    onCreated: (id: string) => void;
+    onCreated: (id: string, key: string) => void;
 }
 
 export function InheritEntityDialog({ parentId, onClose, onCreated }: Props) {
@@ -34,9 +33,11 @@ export function InheritEntityDialog({ parentId, onClose, onCreated }: Props) {
             return;
         }
 
+        const key = generateKey();
         dispatch({
             type: 'addEntity',
             entity: {
+                _key: key,
                 id: entityId,
                 name: entityName || entityId,
                 label: '',                    // унаследуется, если пусто
@@ -46,7 +47,7 @@ export function InheritEntityDialog({ parentId, onClose, onCreated }: Props) {
             } as any,
         });
 
-        onCreated(entityId);
+        onCreated(entityId, key);
     };
 
     // Считаем количество наследуемых атрибутов

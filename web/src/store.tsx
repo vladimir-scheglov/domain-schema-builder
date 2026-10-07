@@ -50,7 +50,7 @@ type Action =
   | { type: 'addWorkflow'; workflow: UIWorkflow }
   | { type: 'updateWorkflow'; id: string; patch: Partial<UIWorkflow> }
   | { type: 'removeWorkflow'; id: string }
-  | { type: 'duplicateEntity'; id: string }
+  | { type: 'duplicateEntity'; id: string, key: string }
   | { type: 'addAttributesBatch'; entityId: string; attributes: UIAttribute[] }
   | { type: 'addTree'; tree: Omit<UITree, '_key'> }
   | { type: 'updateTree'; treeKey: string; patch: Partial<Omit<UITree, '_key'>> }
@@ -77,6 +77,7 @@ function reducer(state: UIState, action: Action): UIState {
           ...state.entities,
           {
             ...action.entity,
+            _key: action.entity._key ?? generateKey(),
             id,
             generateList: true,
             generateModals: true,
@@ -222,6 +223,7 @@ function reducer(state: UIState, action: Action): UIState {
       const copy = cloneEntity(
         original,
         state.entities.map(e => e.id),
+        action.key
       );
 
       return {
@@ -327,7 +329,13 @@ function normalizeLoadedState(s: UIState): UIState {
   };
 }
 
-const STORAGE_KEY = 'dsb.state.v1';
+function initEntities(state: UIState) {
+  state.entities.forEach((e) => {
+    e._key = e._key ?? generateKey();
+  });
+
+  return state;
+}
 
 /** Определяем начальное состояние: URL → черновик → пусто */
 function resolveInitialState(): UIState {
@@ -339,7 +347,7 @@ function resolveInitialState(): UIState {
   const stateParam = params.get('state');
   if (stateParam) {
     const decoded = decodeState(stateParam);
-    if (decoded) return decoded;
+    if (decoded) return initEntities(decoded);
   }
 
   // 2. ?preset=<id>
@@ -348,13 +356,13 @@ function resolveInitialState(): UIState {
     const preset = PRESETS.find(p => p.id === presetId);
     if (preset) {
       const result = loadDslFromText(preset.dsl);
-      if (result.ok && result.state) return result.state;
+      if (result.ok && result.state) return initEntities(result.state);
     }
   }
 
   // 3. Черновик
   const draft = loadDraft();
-  if (draft) return draft.state;
+  if (draft) return initEntities(draft.state);
 
   // 4. Пустое
   return EMPTY;
